@@ -44,6 +44,8 @@ GenMove = Callable[
 def initialize_game_state() -> np.ndarray:
     """
     Returns an ndarray, shape BOARD_SHAPE and data type (dtype) BoardPiece, initialized to 0 (NO_PLAYER).
+
+    
     """
     return np.full(BOARD_SHAPE, NO_PLAYER, dtype=BoardPiece)
 
@@ -62,6 +64,15 @@ def pretty_print_board(board: np.ndarray) -> str:
     |  O O X X     |
     |==============|
     |0 1 2 3 4 5 6 |
+
+    Parameters
+    ----------
+    board : np.ndarray
+        The game board to be printed, with shape (6, 7) and dtype BoardPiece.
+    Returns
+    -------
+    str
+        A string representation of the game board, formatted for human readability
     """
     symbol_map = {
         NO_PLAYER: NO_PLAYER_PRINT,
@@ -92,6 +103,14 @@ def string_to_board(pp_board: str) -> np.ndarray:
     Takes the output of pretty_print_board and turns it back into an ndarray.
     This is quite useful for debugging, when the agent crashed and you have the last
     board state as a string.
+    Parameters
+    ----------
+    pp_board : str
+        The pretty printed board string representation.
+    Returns
+    -------
+    np.ndarray
+        The game board as a numpy array with shape (6, 7) and dtype BoardPiece.
     """
    board = initialize_game_state()
     
@@ -136,6 +155,19 @@ def apply_player_action(board: np.ndarray, action: PlayerAction, player: BoardPi
     Sets board[i, action] = player, where i is the lowest open row. The input 
     board should be modified in place, such that it's not necessary to return 
     something.
+    Parameters
+    ----------
+    board : np.ndarray
+        The current game board.
+    action : PlayerAction
+        The column in which the player wants to place their piece.
+    player : BoardPiece
+        The player making the move, either PLAYER1 or PLAYER2.
+    Raises
+    ------
+    ValueError
+        If no open row is found in the specified column.
+   
     """
 
 
@@ -152,6 +184,16 @@ def connected_four(board: np.ndarray, player: BoardPiece) -> bool:
     """
     Returns True if there are four adjacent pieces equal to `player` arranged
     in either a horizontal, vertical, or diagonal line. Returns False otherwise.
+    Parameters
+    ----------
+    board : np.ndarray
+        The current game board.
+    player : BoardPiece
+        The player whose pieces are to be checked for a connected four.
+    Returns
+    -------
+    bool
+        True if there is a connected four for the player, False otherwise.
     """
     #horizontal
     for row in range(BOARD_ROWS):
@@ -190,6 +232,16 @@ def check_end_state(board: np.ndarray, player: BoardPiece) -> GameState:
     Returns the current game state for the current `player`, i.e. has their last
     action won (GameState.IS_WIN) or drawn (GameState.IS_DRAW) the game,
     or is play still on-going (GameState.STILL_PLAYING)?
+    Parameters
+    ----------
+    board : np.ndarray
+        The current game board.
+    player : BoardPiece
+        The player whose last action is to be checked.
+    Returns
+    -------
+    GameState
+        The current game state, indicating if the game is won, drawn, or still ongoing.     
     """
     if connected_four(board, player):
         return GameState.IS_WIN
@@ -205,6 +257,17 @@ def check_move_status(board: np.ndarray, column: Any) -> MoveStatus:
     The provided column must be of the correct type (PlayerAction).
     Furthermore, the column must be within the bounds of the board and the
     column must not be full.
+
+    Parameters
+    ----------
+    board : np.ndarray
+        The current game board.
+    column : Any
+        The column to be played, which should be of type PlayerAction.
+    Returns
+    -------
+    MoveStatus
+        The status of the move, indicating if it is valid or why it is not. 
     """
     # is action valid?
     if not isinstance(column, PlayerAction):
