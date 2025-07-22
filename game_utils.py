@@ -211,18 +211,22 @@ def connected_four(board: np.ndarray, player: BoardPiece) -> bool:
                 board[row + 2, col] == player and
                 board[row + 3, col] == player):
                 return True
-    #diagonal
-    for row in range(3):
-        for col in range(4):
+    # Check \ diagonals (top-left to bottom-right)
+    for row in range(3):            # max row index: 2 → +3 = 5
+        for col in range(4):        # max col index: 3 → +3 = 6
             if (board[row, col] == player and
                 board[row + 1, col + 1] == player and
                 board[row + 2, col + 2] == player and
                 board[row + 3, col + 3] == player):
                 return True
-            elif (board[row, col] == player and
-                board[row + 1, col - 1] == player and
-                board[row + 2, col - 2] == player and
-                board[row + 3, col - 3] == player):
+
+    # Check / diagonals (bottom-left to top-right)
+    for row in range(3, 6):         # start at row 3, to allow -3 without underflow
+        for col in range(4):        # max col index: 3 → +3 = 6
+            if (board[row, col] == player and
+                board[row - 1, col + 1] == player and
+                board[row - 2, col + 2] == player and
+                board[row - 3, col + 3] == player):
                 return True
 
 
